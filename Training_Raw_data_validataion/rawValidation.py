@@ -270,12 +270,12 @@ class Raw_Data_validation:
                     csv.to_csv("Training_Raw_files_validated/Good_Raw"+file,index=None , header=True)
         except OSError:
             f = open("Training_Logs/missingValuesInColumn.txt", 'a+')
-            self.logger.log(f, "Error Occured while moving the file :: %s" % OSError)
+            self.logger.log(f, "Error Occurred while moving the file :: %s" % OSError)
             f.close()
             raise OSError
         except Exception as e:
             f = open("Training_Logs/missingValuesInColumn.txt", 'a+')
-            self.logger.log(f, "Error Occured:: %s" % e)
+            self.logger.log(f, "Error Occurred:: %s" % e)
             f.close()
             raise e
         f.close()
