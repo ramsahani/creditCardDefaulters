@@ -10,9 +10,9 @@ class dBOperations:
     This class shall be used for handling all the SQL queries.
     """
     def __init__(self):
-        self.path = "Training_Database/"
-        self.badFilePath = "Training_Raw_files_validated/Bad_Raw"
-        self.goodFilePath = "Training_Raw_files_validated/GoodRaw"
+        self.path = "Prediction_Database/"
+        self.badFilePath = "Prediction_Raw_Files_Validated/Bad_Raw"
+        self.goodFilePath = "Prediction_Raw_Files_Validated/GoodRaw"
         self.logger = App_Logger()
 
 
@@ -25,12 +25,12 @@ class dBOperations:
 
         try:
             conn = _sqlite3.connect(self.path+DatabaseName+'.db')
-            file = open('Training_Logs/DataBaseConnectionLog.txt','a+')
+            file = open('Prediction_Logs/DataBaseConnectionLog.txt','a+')
             self.logger.log(file, "Opened %s database successfully " % DatabaseName)
             file.close()
 
         except ConnectionError:
-            file = open("Training_Logs/DataBaseConnectionLog.txt",'a+')
+            file = open("Prediction_Logs/DataBaseConnectionLog.txt",'a+')
             self.logger.log(file, "Error occurred while connecting to database %s " %ConnectionError)
             file.close()
             raise ConnectionError
@@ -44,51 +44,43 @@ class dBOperations:
         :param column_names:
         :return:None
         """
-
         try:
-            conn = self.dataBaseConncetion(DatabaseName)
-            c = conn.cursor()
-            c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name = 'Good_Raw_Data'")
-            if c.fetchall()[0] == 1:
-                conn.close()
-                file = open("Training_Logs/DbTableCreateLog.txt",'a+')
-                self.logger.log(file, "Tables created successfully!!")
-                file.close()
+            conn = self.dataBaseConnection(DatabaseName)
+            conn.execute('DROP TABLE IF EXISTS Good_Raw_Data;')
 
-                file = open("Training_Logs/DataBaseConnectionLog.txt",'a+')
-                self.logger.log(file, "Closed % database successfully" % DatabaseName)
-                file.close()
+            for key in column_names.keys():
+                type = column_names[key]
 
-            else:
-                for key in column_names.keys():
-                    type = column_names[key]
+                # we will remove the column of string datatype before loading as it is not needed for training
+                #in try block we check if the table exists, if yes then add columns to the table
+                # else in catch block we create the table
+                try:
+                    #cur = cur.execute("SELECT name FROM {dbName} WHERE type='table' AND name='Good_Raw_Data'".format(dbName=DatabaseName))
+                    conn.execute('ALTER TABLE Good_Raw_Data ADD COLUMN "{column_name}" {dataType}'.format(column_name=key,dataType=type))
+                except:
+                    conn.execute('CREATE TABLE  Good_Raw_Data ({column_name} {dataType})'.format(column_name=key, dataType=type))
 
-                    # in try block we check if the table exists, if yes then add columns to the table
-                    # else in except block we will create the table.
-                    try:
-                        conn.execute('ALTER TABLE Good_Raw_Data ADD COLUMN "{column_name}" {dataType}'.format(column_name=key, dataType= type))
+            conn.close()
 
-                    except:
-                        conn.execute('CREATE TABLE Good_Raw_Data ({column_name} {dataType})'.format(column_name=key, dataType=type))
-                conn.close()
+            file = open("Prediction_Logs/DbTableCreateLog.txt", 'a+')
+            self.logger.log(file, "Tables created successfully!!")
+            file.close()
 
-                file = open("Training_Logs/DbTableCreateLog.txt",'a+')
-                self.logger.log(file, 'Table created successfully!!')
-                file.close()
-
-                file = open("TrainingLogs/DataBaseConnectionLog.txt",'a+')
-                self.logger.log(file,'Closed %s database successfully' % DatabaseName)
-                file.close()
+            file = open("Prediction_Logs/DataBaseConnectionLog.txt", 'a+')
+            self.logger.log(file, "Closed %s database successfully" % DatabaseName)
+            file.close()
 
         except Exception as e:
-            file = open("Training_Logs/DbTableCreateLog.txt",'a+')
-            self.logger.log(file,"Error while creating table in db : %s" % e)
+            file = open("Prediction_Logs/DbTableCreateLog.txt", 'a+')
+            self.logger.log(file, "Error while creating table: %s " % e)
             file.close()
             conn.close()
-            file=open("Training_Logs/DataBaseConnectionLog.txt",'a+')
+            file = open("Prediction_Logs/DataBaseConnectionLog.txt", 'a+')
             self.logger.log(file, "Closed %s database successfully" % DatabaseName)
             file.close()
             raise e
+
+
 
     def insertInotTableGoodData(self, Database):
         """
@@ -102,7 +94,7 @@ class dBOperations:
         goodFilePath = self.goodFilePath
         badFilePath = self.badFilePath
         onlyfiles = [f for f in listdir(goodFilePath)]
-        log_file = open("Training_Logs/DbInsertLog.txt",'a+')
+        log_file = open("Prediction_Logs/DbInsertLog.txt",'a+')
 
         for file in onlyfiles:
             try:
@@ -136,9 +128,9 @@ class dBOperations:
         :return:
         """
 
-        self.fileFromDb= 'Training_FileFromDB/'
+        self.fileFromDb= 'Prediction_FileFromDB/'
         self.fileName= 'InputFile.csv'
-        log_file = open("Training_Logs/ExportToCsv.txt",'a+')
+        log_file = open("Prediction_Logs/ExportToCsv.txt",'a+')
         try:
             conn = self.dataBaseConncetion(Database)
             sqlSelect = "SELECT * FROM Good_Raw_Data"
