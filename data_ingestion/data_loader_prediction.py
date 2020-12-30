@@ -29,3 +29,4 @@ class Data_Getter:
                                    "Exception occurred in the get_data method of Data_Getter class.Exception message : %s " % e)
             self.logger_object.log(self.file_object,
                                    'Data Load Unsuccessful. Exited the get_data method of Data_Getter class.')
+            raise Exception()

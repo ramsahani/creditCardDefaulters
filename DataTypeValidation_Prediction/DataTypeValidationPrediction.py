@@ -159,4 +159,4 @@ class dBOperations:
             self.logger.log(log_file, "File exporting Failed : %s" % e)
             log_file.close()
             conn.close()
-            raise e
+            raise Exception()
