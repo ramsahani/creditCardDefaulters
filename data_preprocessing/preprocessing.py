@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.impute import KNNImputer
+from sklearn.impute import SimpleImputer
 
 class Preprocessor:
     """
@@ -79,4 +79,78 @@ class Preprocessor:
         except Exception as e:
             self.logger_object.log(self.file_object,'Exception occured in is_null_present method of the Preprocessor class. Exception message:  ' + str(e))
             self.logger_object.log(self.file_object,'Finding missing values failed. Exited the is_null_present method of the Preprocessor class')
+            raise Exception()
+
+
+    def impute_missing_values(self, data, cols_with_missing_values):
+        """
+         This method replaces all the missing values in DataFrame using KNN Imputer
+        :param data:
+        :param cols_with_missing_values:
+        :return: A DataFrame which has all the missing values imputed.
+        """
+
+        self.logger_object.log(self.file_object, 'Entered the impute_missing_values method of Preprocessor class.')
+        self.data = data
+        self.cols_with_missing_values = cols_with_missing_values
+        try:
+            self.imputer = SimpleImputer(strategy="most_frequent")
+            for col in self.cols_with_missing_values:
+                self.data[col] = self.imputer.fit_transform(self.data[col])
+            self.logger_object.log(self.file_object, "Imputing missing values Successful.Exited impute_missing_values method of Preprocessor class. ")
+            return self.data
+        except Exception as e:
+            self.logger_object.log(self.file_object, 'Exception occurred in impute_missing_values method of Preprocessor class. Exception message: %s' % e)
+
+            self.logger_object.log(self.file_object, 'Imputing missing values failed.Exited the impute_missing_values method of Preprocessor class.')
+            raise Exception()
+
+    def encode_categorical_columns(self, data):
+        """
+        This method encodes the categorical values to numerical values.
+        :param data:
+        :return:only the columns with categorical values converted to numerical values
+
+        """
+
+        self.logger_object.log(self.file_object, "Entered the encode_categorical_columns method of Preprocessor class.")
+        try:
+            self.cat_df = data.select_dtype(include = ['object']).copy()
+            # Using the dummy encoding to encode the categorical columns to numerical ones
+            for col in self.cat_df.columns:
+                self.cat_df = pd.get_dummies(self.cat_df, columns=[col],prefix=[col],drop_first=True)
+
+            self.logger_object.log(self.file_object, 'Encoding for categorical values successful.Exited the encode_categorical_columns method of Preprocessor class')
+            return self.cat_df
+        except Exception as e:
+            self.logger_object.log(self.file_object,
+                                   'Exception occured in encode_categorical_columns method of the Preprocessor class. Exception message:  ' + str(
+                                       e))
+            self.logger_object.log(self.file_object,
+                                   'encoding for categorical columns Failed. Exited the encode_categorical_columns method of the Preprocessor class')
+            raise Exception()
+
+    def handle_imbalanced_dataset(self, x, y):
+        """
+        This method handles the imbalanced data set to make it balanced one.
+
+        :param x:
+        :param y:
+        :return: new balanced feature and target columns
+        """
+
+        self.logger_object.log(self.file_object ,'Entered the handle_imbalanced_dataset method of Preprocessor .')
+        try:
+            self.rdsmple = RandomOverSampler()
+            self.x_sampled,self.y_sampled  = self.rdsmple.fit_sample(x,y)
+            self.logger_object.log(self.file_object,
+                                   'dataset balancing successful. Exited the handle_imbalanced_dataset method of the Preprocessor class')
+            return self.x_sampled,self.y_sampled
+
+        except Exception as e:
+            self.logger_object.log(self.file_object,
+                                   'Exception occured in handle_imbalanced_dataset method of the Preprocessor class. Exception message:  ' + str(
+                                       e))
+            self.logger_object.log(self.file_object,
+                                   'dataset balancing Failed. Exited the handle_imbalanced_dataset method of the Preprocessor class')
             raise Exception()
