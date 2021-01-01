@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+
 
 class Preprocessor:
     """
@@ -81,6 +83,24 @@ class Preprocessor:
             self.logger_object.log(self.file_object,'Finding missing values failed. Exited the is_null_present method of the Preprocessor class')
             raise Exception()
 
+    def separate_label_feature(self, data,label_column_name):
+        """
+        This method separates the feature and a Label columns
+        :param label_column_name:
+        :return:
+        """
+        self.logger_object.log(self.file_object, 'Entered the separate_label_feature method of the Preprocessor class')
+        try:
+            self.X=data.drop(labels=label_column_name,axis=1) # drop the columns specified and separate the feature columns
+            self.Y=data[label_column_name] # Filter the Label columns
+            self.logger_object.log(self.file_object,
+                                   'Label Separation Successful. Exited the separate_label_feature method of the Preprocessor class')
+            return self.X,self.Y
+        except Exception as e:
+            self.logger_object.log(self.file_object,'Exception occured in separate_label_feature method of the Preprocessor class. Exception message:  ' + str(e))
+            self.logger_object.log(self.file_object, 'Label Separation Unsuccessful. Exited the separate_label_feature method of the Preprocessor class')
+            raise Exception()
+
 
     def impute_missing_values(self, data, cols_with_missing_values):
         """
@@ -104,6 +124,35 @@ class Preprocessor:
 
             self.logger_object.log(self.file_object, 'Imputing missing values failed.Exited the impute_missing_values method of Preprocessor class.')
             raise Exception()
+    def scale_numerical_columns(self,data):
+        """
+             This method scales the numerical values using the Standard Scaler.
+        :param data:
+        :return: A DataFrame with scaled data
+        """
+
+        self.logger_object.log(self.file_object,
+                               'Entered the scale_numerical_columns method of the Preprocessor class')
+
+        self.data=data
+
+        try:
+            self.num_df = self.data.select_dtypes(include=['int64']).copy()
+            self.scaler = StandardScaler()
+            self.scaled_data = self.scaler.fit_transform(self.num_df)
+            self.scaled_num_df = pd.DataFrame(data=self.scaled_data, columns=self.num_df.columns)
+
+
+            self.logger_object.log(self.file_object, 'scaling for numerical values successful. Exited the scale_numerical_columns method of the Preprocessor class')
+            return self.scaled_num_df
+
+        except Exception as e:
+            self.logger_object.log(self.file_object,'Exception occured in scale_numerical_columns method of the Preprocessor class. Exception message:  ' + str(e))
+            self.logger_object.log(self.file_object, 'scaling for numerical columns Failed. Exited the scale_numerical_columns method of the Preprocessor class')
+            raise Exception()
+
+
+
 
     def encode_categorical_columns(self, data):
         """
@@ -130,27 +179,27 @@ class Preprocessor:
                                    'encoding for categorical columns Failed. Exited the encode_categorical_columns method of the Preprocessor class')
             raise Exception()
 
-    def handle_imbalanced_dataset(self, x, y):
-        """
-        This method handles the imbalanced data set to make it balanced one.
-
-        :param x:
-        :param y:
-        :return: new balanced feature and target columns
-        """
-
-        self.logger_object.log(self.file_object ,'Entered the handle_imbalanced_dataset method of Preprocessor .')
-        try:
-            self.rdsmple = RandomOverSampler()
-            self.x_sampled,self.y_sampled  = self.rdsmple.fit_sample(x,y)
-            self.logger_object.log(self.file_object,
-                                   'dataset balancing successful. Exited the handle_imbalanced_dataset method of the Preprocessor class')
-            return self.x_sampled,self.y_sampled
-
-        except Exception as e:
-            self.logger_object.log(self.file_object,
-                                   'Exception occured in handle_imbalanced_dataset method of the Preprocessor class. Exception message:  ' + str(
-                                       e))
-            self.logger_object.log(self.file_object,
-                                   'dataset balancing Failed. Exited the handle_imbalanced_dataset method of the Preprocessor class')
-            raise Exception()
+    # def handle_imbalanced_dataset(self, x, y):
+    #     """
+    #     This method handles the imbalanced data set to make it balanced one.
+    #
+    #     :param x:
+    #     :param y:
+    #     :return: new balanced feature and target columns
+    #     """
+    #
+    #     self.logger_object.log(self.file_object ,'Entered the handle_imbalanced_dataset method of Preprocessor .')
+    #     try:
+    #         self.rdsmple = RandomOverSampler()
+    #         self.x_sampled,self.y_sampled  = self.rdsmple.fit_sample(x,y)
+    #         self.logger_object.log(self.file_object,
+    #                                'dataset balancing successful. Exited the handle_imbalanced_dataset method of the Preprocessor class')
+    #         return self.x_sampled,self.y_sampled
+    #
+    #     except Exception as e:
+    #         self.logger_object.log(self.file_object,
+    #                                'Exception occured in handle_imbalanced_dataset method of the Preprocessor class. Exception message:  ' + str(
+    #                                    e))
+    #         self.logger_object.log(self.file_object,
+    #                                'dataset balancing Failed. Exited the handle_imbalanced_dataset method of the Preprocessor class')
+    #         raise Exception()
