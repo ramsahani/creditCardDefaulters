@@ -197,8 +197,9 @@ class Raw_Data_validation:
                     splitAtDot = (re.split('_', splitAtDot[0]))
                     if len(splitAtDot[1]) == LengthOfDateStampInFile:
                         if len(splitAtDot[2])== LengthOfTimeStampInFile:
+
                             shutil.copy('Training_Batch_Files/' + filename, "Training_Raw_files_validated/Good_Raw" )
-                            self.logger.log(f, "Valida File Name !! File moved to Good Raw filder:: %" % filename)
+                            self.logger.log(f, "Valid File Name !! File moved to Good Raw folder: %s" % filename)
 
                         else:
                             shutil.copy("Training_Batch_Files/"+filename, "Training_Raw_files_validated/Bad_Raw")
@@ -206,9 +207,12 @@ class Raw_Data_validation:
 
                     else:
                         shutil.copy("Training_Batch_Files/"+filename,"Training_Raw_files_validated/Bad_Raw")
-                        self.logger.log(f, "Invalid File Name !! File moved to Bad Raw Data: %s" %filename)
+                        self.logger.log(f, "Invalid File Name !! File moved to Bad Raw Data: %s" % filename)
+                else:
+                    shutil.copy('Training_Batch_Files/'+filename, "Training_Raw_files_validated/Bad_Raw")
+                    self.logger.log(f, "Invalid File Name !! File moved to Bad Raw Data: %s" % filename)
 
-                f.close()
+            f.close()
 
         except Exception as e:
             f = open("Training_Logs/nameValidationLog.txt", 'a+')
@@ -234,8 +238,9 @@ class Raw_Data_validation:
                 if csv.shape[1] == NumberofColumns :
                     pass
                 else:
-                    shutil.move("Training_Raw_files_validated/Good_Raw"+file, 'Training_Raw_file_validated/Bad_Raw')
+                    shutil.move("Training_Raw_files_validated/Good_Raw/"+file, 'Training_Raw_files_validated/Bad_Raw')
                     self.logger.log(f,"Invalid Column Length !! File moved to Bad Raw Folder:: %s" % file)
+                self.logger.log(f,'Column Length Validation Completed')
         except Exception as e:
             f = open("Training_Logs/columnValidationLog.txt",'a+')
             self.logger.log(f, "Error occurred while moving the file :: %s " % e)
@@ -255,8 +260,8 @@ class Raw_Data_validation:
             f = open("Training_Logs/missingValuesInColumn.txt",'a+')
             self.logger.log(f, "Missing Values validation Started!!")
 
-            for file in listdir("Training_Raw_files_validated/Good_Raw"):
-                csv= pd.read_csv("Training_Raw_files_validated/Good_Raw"+ file)
+            for file in listdir("Training_Raw_files_validated/Good_Raw/"):
+                csv= pd.read_csv("Training_Raw_files_validated/Good_Raw/"+ file)
                 count =0
                 for columns in csv:
                     if (len(csv[columns])- csv[columns].count())==len(csv[columns]):
@@ -267,7 +272,7 @@ class Raw_Data_validation:
                         break
                 if count ==0:
                     csv.rename(columns ={"Unnamed: 0":"creditCardFraud"},inplace=True)
-                    csv.to_csv("Training_Raw_files_validated/Good_Raw"+file,index=None , header=True)
+                    csv.to_csv("Training_Raw_files_validated/Good_Raw/"+file,index=None , header=True)
         except OSError:
             f = open("Training_Logs/missingValuesInColumn.txt", 'a+')
             self.logger.log(f, "Error Occurred while moving the file :: %s" % OSError)

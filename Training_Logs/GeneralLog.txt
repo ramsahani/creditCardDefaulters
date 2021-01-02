@@ -1,0 +1,2 @@
+2021-01-02/23:34:48		BadRaw directory deleted before starting validation!!!
+2021-01-02/23:34:48		Good_Raw directory deleted successfully!!

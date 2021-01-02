@@ -12,7 +12,7 @@ class dBOperations:
     def __init__(self):
         self.path = "Training_Database/"
         self.badFilePath = "Training_Raw_files_validated/Bad_Raw"
-        self.goodFilePath = "Training_Raw_files_validated/GoodRaw"
+        self.goodFilePath = "Training_Raw_files_validated/Good_Raw"
         self.logger = App_Logger()
 
 
@@ -49,19 +49,23 @@ class dBOperations:
             conn = self.dataBaseConncetion(DatabaseName)
             c = conn.cursor()
             c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name = 'Good_Raw_Data'")
-            if c.fetchall()[0] == 1:
+
+            if c.fetchone()[0] == 1:
+
                 conn.close()
                 file = open("Training_Logs/DbTableCreateLog.txt",'a+')
                 self.logger.log(file, "Tables created successfully!!")
                 file.close()
 
                 file = open("Training_Logs/DataBaseConnectionLog.txt",'a+')
-                self.logger.log(file, "Closed % database successfully" % DatabaseName)
+                self.logger.log(file, "Closed %s database successfully" % DatabaseName)
                 file.close()
 
             else:
+
                 for key in column_names.keys():
                     type = column_names[key]
+
 
                     # in try block we check if the table exists, if yes then add columns to the table
                     # else in except block we will create the table.
@@ -76,7 +80,7 @@ class dBOperations:
                 self.logger.log(file, 'Table created successfully!!')
                 file.close()
 
-                file = open("TrainingLogs/DataBaseConnectionLog.txt",'a+')
+                file = open("Training_Logs/DataBaseConnectionLog.txt",'a+')
                 self.logger.log(file,'Closed %s database successfully' % DatabaseName)
                 file.close()
 
@@ -108,11 +112,11 @@ class dBOperations:
             try:
                 with open(goodFilePath+'/' + file, 'r') as f:
                     next(f)
-                    reader = csv.reader(f, delimeter='\n')
+                    reader = csv.reader(f,delimiter='\n')
                     for line in enumerate(reader):
                         for list_ in (line[1]):
                             try:
-                                conn.execute("INSERT INTO Good_Raw_Data value ({values})".format(values=list_ ))
+                                conn.execute("INSERT INTO Good_Raw_Data values ({values})".format(values=list_ ))
                                 self.logger.log(log_file," %s: File loaded successfully !! " % file)
                                 conn.commit()
                             except Exception as e:

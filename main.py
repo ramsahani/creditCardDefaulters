@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 from flask import Response
 import os
 from flask_cors import CORS , cross_origin
-from prediction_Validataion_Insertion import pred_validation
+from prediction_Validation_Insertion import pred_validation
 from trainingModel import trainModel
 from training_Validation_Insertion import  train_validation
 from predictFromModel import prediction
@@ -58,7 +58,7 @@ def predictRouteClient():
         return Response("Error Occurred! %s" %e)
 
 
-@app.route("/train", methods = ['POST'])
+@app.route("/train", methods = ['GET'])
 @cross_origin()
 def trainingRouteClient():
     try:
@@ -80,7 +80,7 @@ def trainingRouteClient():
 
     except Exception as e:
 
-        return Response("Error Occurred! %s" % KeyError)
+        return Response("Error Occurred! %s" % e)
     return RecursionError("Training successful!!")
 
 port = int(os.getenv("PORT",5001))

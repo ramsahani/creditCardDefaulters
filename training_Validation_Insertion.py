@@ -10,15 +10,15 @@ class train_validation:
         self.raw_data = Raw_Data_validation(path)
         self.dataTransform = dataTransform()
         self.dBOperation = dBOperations()
-        self.cwd = os.getcwd()
-        self.file_object = open(self.cwd + "Training_Main_Log.txt", 'a+')
+
+        self.file_object = open("Training_Logs/Training_Main_Log.txt", 'a+')
         self.log_writer = logger.App_Logger()
 
     def train_validation(self):
         try:
             self.log_writer.log(self.file_object,'Start of Validation on Files !!' )
             # extracting values from training schema
-            LengthOfDateStampInFile, LengthOfTimeStampInFile, column_names, noofcolumn =self.raw_data.valuesFromSchema()
+            LengthOfTimeStampInFile,LengthOfDateStampInFile, noofcolumn, column_names=self.raw_data.valuesFromSchema()
 
             # getting the regex defined to validate filename
             regex = self.raw_data.manualRegexCreation()
@@ -32,7 +32,7 @@ class train_validation:
             #validating if any column has all values missing
             self.raw_data.validateMissingValuesInWholeColumn()
 
-            self.log.writer.log(self.file_object, "Raw Data Validation Complete !!")
+            self.log_writer.log(self.file_object, "Raw Data Validation Complete !!")
 
             self.log_writer.log(self.file_object, "Starting Data Transformation!!")
             # replacing blanks in the csv file with "Null" values to insert in table
