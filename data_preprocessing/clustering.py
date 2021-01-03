@@ -31,7 +31,7 @@ class KMeansClustering:
             plt.plot(range(1,11), wcss) # creating the graph between WCSS and the number of clusters.
             plt.title('The Elbow Method')
             plt.xlabel("Number of clusters")
-            plt.ylable('WCSS')
+            plt.ylabel('WCSS')
 
             plt.savefig('preprocessing_data/K-Means_Elbow.PNG')
             #findinf the value of the optimum cluster programmatically

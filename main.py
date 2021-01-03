@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 from flask import Response
+from wsgiref import  simple_server
 import os
 from flask_cors import CORS , cross_origin
 from prediction_Validation_Insertion import pred_validation
@@ -48,8 +49,8 @@ def predictRouteClient():
 
             # predicting for dataset present in database
             path,json_predictions = pred.predictionFromModel()
-            return Response("Prediction File created at %s!!!" +str(path)) + 'and few of the predictions are ' + str(
-                json.loads(json_predictions))
+            return Response("Prediction File created at %s!!!" +str(path) + 'and few of the predictions are ' + str(
+                json.loads(json_predictions)))
     except ValueError:
         return Response("Error Occurred! %s" %ValueError)
     except KeyError:
@@ -83,6 +84,11 @@ def trainingRouteClient():
         return Response("Error Occurred! %s" % e)
     return RecursionError("Training successful!!")
 
-port = int(os.getenv("PORT",5001))
+# port = int(os.getenv("PORT",5001))
 if __name__ == "__main__":
-    app.run(port=port,debug=True)
+    host = '0.0.0.0'
+    port = 5000
+
+    httpd = simple_server.make_server(host, port, app)
+
+    httpd.serve_forever()

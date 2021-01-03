@@ -33,7 +33,7 @@ class Prediction_Data_validation:
             column_names = dic['ColName']
             NumberofColumns = dic['NumberofColumns']
 
-            file = open("Training_Logs/valuesfromSchemaValidationLog.txt", 'a+')
+            file = open("Prediction_Logs/valuesfromSchemaValidationLog.txt", 'a+')
             message = "LengthOfDateStampInFile:: %s" % LengthOfDateStampInFile + "\t" + "LengthOfTimeStampInFile:: %s" % LengthOfTimeStampInFile + "\t " + "NumberofColumns:: %s" % NumberofColumns + "\n"
             self.logger.log(file, message)
 
@@ -65,7 +65,7 @@ class Prediction_Data_validation:
         :return: Regex pattern
         """
         # "SampleFileName": "creditCardFraud_021119920_010222.csv"
-        regex = "['creditcardsFraud']+['\_'']+[\d_]+[\d]+\.csv"
+        regex = "['creditCardFraud']+['\_'']+[\d_]+[\d]+\.csv"
         return regex
 
     def createDirectoryForGoodBadRawData(self):
@@ -144,7 +144,7 @@ class Prediction_Data_validation:
             if not os.path.isdir(path):
                 os.makedirs(path)
             source = "Prediction_Raw_Files_Validated/Bad_Raw/"
-            dest = 'PredictionArchiveBadData_'+str(time)+'_'+ str(date)
+            dest = 'PredictionArchiveBadData/BadData_'+str(time)+'_'+ str(date)
             if not os.path.isdir(dest):
                 os.makedirs(dest)
 
@@ -182,14 +182,16 @@ class Prediction_Data_validation:
         self.deleteExistingGoodDataPredictionFolder()
         self.createDirectoryForGoodBadRawData()
         onlyfiles = [f for f in listdir(self.Batch_Directory)]
+
         try:
             f = open("Prediction_Logs/nameValidationLog.txt",'a+')
             for filename in onlyfiles:
                 if (re.match(regex,filename)):
                     splitAtDot = re.split('.csv',filename)
                     splitAtDot = (re.split('_',splitAtDot[0]))
-                    if len(splitAtDot[1]) == LengthOfTimeStampInFile:
-                        if len(splitAtDot[2]) ==LengthOfDateStampInFile:
+
+                    if len(splitAtDot[1]) == LengthOfDateStampInFile:
+                        if len(splitAtDot[2]) ==LengthOfTimeStampInFile:
                             shutil.copy("Prediction_Batch_files/" + filename, "Prediction_Raw_Files_Validated/Good_Raw")
                             self.logger.log(f, "Valid File name !! File moved to Good_Raw Folder :: %s" % filename)
                         else:

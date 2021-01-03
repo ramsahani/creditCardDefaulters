@@ -45,25 +45,26 @@ class trainModel:
             kmeans = clustering.KMeansClustering(self.file_object,self.log_writer) #object initialization.
             numbers_of_clusters = kmeans.elbow_plot(X)
 
+            X=kmeans.create_clusters(X,numbers_of_clusters)
             #create a new column in dataset consisting of the corresponding cluster assignments.
             X['Labels']=Y
-
+            print(X)
             # getting the unique clusters from our dataset
-            list_of_clusters = X['Cluster'].unique()
+            list_of_clusters = X['Clusters'].unique()
 
             """ parsing all teh clusters and looking for best ML algorithm to fit on individual cluster"""
             for i in list_of_clusters:
-                cluster_data =X[X['Cluster']==i] #filter the data for one cluster
+                cluster_data =X[X['Clusters']==i] #filter the data for one cluster
 
                 #prepare the feature and Label columns
-                cluster_feature = cluster_data.drop(['Labels,Cluster'], axis= 1)
+                cluster_feature = cluster_data.drop(['Labels','Clusters'], axis= 1)
                 cluster_label = cluster_data['Labels']
 
                 #splitting the data into training and test set for each cluster one by one
                 x_train, x_test, y_train, y_test = train_test_split(cluster_feature,cluster_label, test_size= 1/3, random_state=355)
                 # Proceeding with more data pre-processing steps
                 train_x = preprocessor.scale_numerical_columns(x_train)
-                test_x =  preprocessor.scale_numerical_columns(test_x)
+                test_x =  preprocessor.scale_numerical_columns(x_test)
 
                 model_finder = tuner.Model_Finder(self.file_object,self.log_writer)
 

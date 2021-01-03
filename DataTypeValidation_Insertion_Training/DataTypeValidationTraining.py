@@ -94,7 +94,7 @@ class dBOperations:
             file.close()
             raise e
 
-    def insertInotTableGoodData(self, Database):
+    def insertIntoTableGoodData(self, Database):
         """
         This method inserts the Good data files from the Good Data folder into the table created in db.
         and if column type doesn't matches move it to the Bad Data folder.
@@ -107,20 +107,23 @@ class dBOperations:
         badFilePath = self.badFilePath
         onlyfiles = [f for f in listdir(goodFilePath)]
         log_file = open("Training_Logs/DbInsertLog.txt",'a+')
-
+        print(onlyfiles)
         for file in onlyfiles:
             try:
                 with open(goodFilePath+'/' + file, 'r') as f:
                     next(f)
                     reader = csv.reader(f,delimiter='\n')
                     for line in enumerate(reader):
+
                         for list_ in (line[1]):
+
                             try:
-                                conn.execute("INSERT INTO Good_Raw_Data values ({values})".format(values=list_ ))
-                                self.logger.log(log_file," %s: File loaded successfully !! " % file)
+                                conn.execute("INSERT INTO Good_Raw_Data values ({values})".format(values=(list_)))
+
                                 conn.commit()
                             except Exception as e:
                                 raise e
+                self.logger.log(log_file, " %s: File loaded successfully !! " % file)
             except Exception as e:
 
                 conn.rollback()
@@ -130,6 +133,8 @@ class dBOperations:
                 log_file.close()
                 conn.close()
                 raise e
+        conn.close()
+        log_file.close()
 
 
     def selectingDatafromtableintocsv(self,Database):
@@ -152,6 +157,7 @@ class dBOperations:
 
             results = cursor.fetchall()
             # get the headers of the csv file
+
             headers = [i[0] for i in cursor.description]
 
             #Make the CSV output directory
@@ -159,14 +165,16 @@ class dBOperations:
                 os.makedirs(self.fileFromDb)
 
             #Open CSV file for writing.
-            csvFile = csv.writer(open(self.fileFromDb + self.fileName, 'w',newline=''),delimeter =',',lineterminator= '\r\n',quoting = csv.QUOTE_ALL,escapechar='\\')
+            csvFile = csv.writer(open(self.fileFromDb + self.fileName, 'w',newline=''),delimiter =',',lineterminator= '\r\n',quoting = csv.QUOTE_ALL,escapechar='\\')
 
             # Add the headers and data to the CSV file.
+
             csvFile.writerow(headers)
-            csvFile.writerow(results)
+            csvFile.writerows(results)
 
             self.logger.log(log_file, 'File  exported successfully !! ')
-
+            log_file.close()
+            conn.close()
         except Exception as e:
             self.logger.log(log_file, "File exporting Failed : %s" % e)
             log_file.close()

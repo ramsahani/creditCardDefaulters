@@ -31,7 +31,7 @@ class Model_Finder:
             self.param_grid = {"var_smoothing": [1e-9, 0.1, 0.001, 0.5, 0.05, 0.01, 1e-8, 1e-7, 1e-6, 1e-10, 1e-11]}
 
             #Creating am object of the Grid Search class
-            self.grid = GridSearchCV(estimator=self.gnb, param_grid=self.gnb, cv=3, verbose=3)
+            self.grid = GridSearchCV(estimator=self.gnb, param_grid=self.param_grid, cv=3, verbose=3)
             #finding the best parameters
             self.grid.fit(train_x,train_y)
 
@@ -68,7 +68,7 @@ class Model_Finder:
             self.param_grid_xgboost = {"n_estimators":[50, 100, 130],"max_depth":range(3,11,1),"random_state":[0,50,100]}
 
             # Creating an object of the Grid Search class
-            self.grid = GridSearchCV(XGBClassifier(objective='binary:logistic'),self.param_grid_xgboost, verbos=3, cv=2, n_jobs=-1 )
+            self.grid = GridSearchCV(XGBClassifier(objective='binary:logistic'),self.param_grid_xgboost, verbose=3, cv=2, n_jobs=-1 )
             # finding the best parameters
             self.grid.fit(train_x, train_y)
 

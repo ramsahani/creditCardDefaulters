@@ -12,7 +12,7 @@ class dBOperations:
     def __init__(self):
         self.path = "Prediction_Database/"
         self.badFilePath = "Prediction_Raw_Files_Validated/Bad_Raw"
-        self.goodFilePath = "Prediction_Raw_Files_Validated/GoodRaw"
+        self.goodFilePath = "Prediction_Raw_Files_Validated/Good_Raw"
         self.logger = App_Logger()
 
 
@@ -45,7 +45,7 @@ class dBOperations:
         :return:None
         """
         try:
-            conn = self.dataBaseConnection(DatabaseName)
+            conn = self.dataBaseConncetion(DatabaseName)
             conn.execute('DROP TABLE IF EXISTS Good_Raw_Data;')
 
             for key in column_names.keys():
@@ -100,11 +100,11 @@ class dBOperations:
             try:
                 with open(goodFilePath+'/' + file, 'r') as f:
                     next(f)
-                    reader = csv.reader(f, delimeter='\n')
+                    reader = csv.reader(f, delimiter='\n')
                     for line in enumerate(reader):
                         for list_ in (line[1]):
                             try:
-                                conn.execute("INSERT INTO Good_Raw_Data value ({values})".format(values=list_ ))
+                                conn.execute("INSERT INTO Good_Raw_Data values ({values})".format(values=list_ ))
                                 self.logger.log(log_file," %s: File loaded successfully !! " % file)
                                 conn.commit()
                             except Exception as e:
@@ -147,11 +147,11 @@ class dBOperations:
                 os.makedirs(self.fileFromDb)
 
             #Open CSV file for writing.
-            csvFile = csv.writer(open(self.fileFromDb + self.fileName, 'w',newline=''),delimeter =',',lineterminator= '\r\n',quoting = csv.QUOTE_ALL,escapechar='\\')
+            csvFile = csv.writer(open(self.fileFromDb + self.fileName, 'w',newline=''),delimiter =',',lineterminator= '\r\n',quoting = csv.QUOTE_ALL,escapechar='\\')
 
             # Add the headers and data to the CSV file.
             csvFile.writerow(headers)
-            csvFile.writerow(results)
+            csvFile.writerows(results)
 
             self.logger.log(log_file, 'File  exported successfully !! ')
 

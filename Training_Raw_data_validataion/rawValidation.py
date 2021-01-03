@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from os import listdir
 import os
 import re
@@ -140,6 +140,7 @@ class Raw_Data_validation:
             We archive the bad files to send them back to the client for invalid data issue.
         :return: None
         """
+
         now = datetime.now()
         date = now.date()
         time = now.strftime("%H%M%S")
@@ -164,6 +165,7 @@ class Raw_Data_validation:
                     shutil.rmtree(path+ 'Bad_Raw/')
             self.logger.log(file, 'Bad Raw Data Folder Deleted Successfully!!')
             file.close()
+
 
         except Exception as e:
             file = open("Training_Logs/GeneralLog.txt",'a+')
@@ -240,7 +242,7 @@ class Raw_Data_validation:
                 else:
                     shutil.move("Training_Raw_files_validated/Good_Raw/"+file, 'Training_Raw_files_validated/Bad_Raw')
                     self.logger.log(f,"Invalid Column Length !! File moved to Bad Raw Folder:: %s" % file)
-                self.logger.log(f,'Column Length Validation Completed')
+            self.logger.log(f,'Column Length Validation Completed!!')
         except Exception as e:
             f = open("Training_Logs/columnValidationLog.txt",'a+')
             self.logger.log(f, "Error occurred while moving the file :: %s " % e)
@@ -273,6 +275,7 @@ class Raw_Data_validation:
                 if count ==0:
                     csv.rename(columns ={"Unnamed: 0":"creditCardFraud"},inplace=True)
                     csv.to_csv("Training_Raw_files_validated/Good_Raw/"+file,index=None , header=True)
+            self.logger.log(f,"Missing Values validation Completed!!")
         except OSError:
             f = open("Training_Logs/missingValuesInColumn.txt", 'a+')
             self.logger.log(f, "Error Occurred while moving the file :: %s" % OSError)

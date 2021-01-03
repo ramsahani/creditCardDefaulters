@@ -8,7 +8,7 @@ from Prediction_Raw_Data_Validation.predictionDataValidation import Prediction_D
 class prediction:
 
     def __init__(self,path):
-        self.file_object = open("Prediction_Logs/Prediction_Logs.txt",'a+')
+        self.file_object = open("Prediction_Logs/Prediction_Log.txt",'a+')
         self.log_writer = logger.App_Logger()
         self.pred_data_val = Prediction_Data_validation(path)
 
@@ -18,7 +18,7 @@ class prediction:
         try:
             self.pred_data_val.deletePredictionFile() # deletes the existing file from last run!
             self.log_writer.log(self.file_object, 'Start of Prediction')
-            data_getter = data_loader_prediction.Data_Getter_Pred(self.file_object,  self.log_writer)
+            data_getter = data_loader_prediction.Data_Getter(self.file_object,  self.log_writer)
             data = data_getter.get_data()
 
             preprocessor = preprocessing.Preprocessor(self.file_object, self.log_writer)
@@ -39,6 +39,7 @@ class prediction:
             clusters = kmeans.predict(X) # drops the first column for cluster prediction
             X['clusters'] = clusters
             clusters = X['clusters'].unique()
+
             prediction = []
             for i in clusters:
                 cluster_data = X[X['clusters']==i]
@@ -47,14 +48,14 @@ class prediction:
                 model = file_loader.load_model(model_name)
                 result = model.predict(cluster_data)
 
-            final = pd.DataFrame(list(zip(result)),columns = ['Predictions'])
+            final = pd.DataFrame(list(zip(range(X.shape[0]),result)),columns = ['Customer No.','Predictions'],)
             path = "Prediction_Output_File/Predictions.csv"
             final.to_csv("Prediction_Output_File/Predictions.csv",header=True, mode='a+') #append result to prediction file
             self.log_writer.log(self.file_object,'End of Prediction')
         except Exception as ex:
             self.log_writer.log(self.file_object, 'Error occured while running the prediction!! Error:: %s' % ex)
             raise ex
-        return path,result.head().to_json(orient='records')
+        return path,final.head().to_json(orient='records')
 
 
 
