@@ -1,0 +1,28 @@
+2021-01-04/00:55:53		Start of Validation on files for prediction!!
+2021-01-04/00:55:54		Raw Data Validation Completed!!
+2021-01-04/00:55:54		Starting Data Transformation!!
+2021-01-04/00:55:54		Data Transformation Completed!!
+2021-01-04/00:55:54		Creating Prediction_Database and tables on the basis of given schema!!
+2021-01-04/00:55:55		Table creation completed!!
+2021-01-04/00:55:55		Insertion of Data into Table started!!
+2021-01-04/00:58:24		Insertion in table Completed!!
+2021-01-04/00:58:24		Deleting Good Data Folder!!!
+2021-01-04/00:58:24		Good_Data folder deleted!!!
+2021-01-04/00:58:24		Moving bad files to Archive and deleting Bad_Data folder!!!
+2021-01-04/00:58:24		Bad files moved to archive!! Bad folder Deleted!!
+2021-01-04/00:58:24		Validation Operation completed!!
+2021-01-04/00:58:24		Extracting csv file from table
+2021-01-04/00:58:24		Start of Prediction
+2021-01-04/00:58:24		Entered the get_data method of the Data_Getter class
+2021-01-04/00:58:24		Data Load successful. Exited the get_data method of Data_Getter class 
+2021-01-04/00:58:24		Entered is_null_present method of Preprocessor class.
+2021-01-04/00:58:24		Finding missing values is a success.Data written to null_values file. Exited the is_null method of Preprocessor class. 
+2021-01-04/00:58:24		Entered the scale_numerical_columns method of the Preprocessor class
+2021-01-04/00:58:24		scaling for numerical values successful. Exited the scale_numerical_columns method of the Preprocessor class
+2021-01-04/00:58:24		Entered the load_model method of File Operation class.
+2021-01-04/00:58:24		Model fileKMeansloaded successfully.Exited the load_model method of File_Operation class.
+2021-01-04/00:58:25		Entered the find_correct_model_file method of File_Operation class.
+2021-01-04/00:58:25		Exited the find_correct_model_file method of the Model_Finder class.
+2021-01-04/00:58:25		Entered the load_model method of File Operation class.
+2021-01-04/00:58:25		Model fileXGBoost1loaded successfully.Exited the load_model method of File_Operation class.
+2021-01-04/00:58:25		End of Prediction

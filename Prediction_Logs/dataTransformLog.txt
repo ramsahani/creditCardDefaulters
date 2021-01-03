@@ -1,0 +1,2 @@
+2021-01-04/00:55:54		creditCardFraud_28011960_120210.csv: Quotes added successfully !!!
+2021-01-04/00:55:54		creditCardFraud_28011962_120212.csv: Quotes added successfully !!!

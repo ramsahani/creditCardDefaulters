@@ -1,0 +1,2 @@
+2021-01-04/00:58:24		Bad files moved to archive
+2021-01-04/00:58:24		Bad Raw Data Folder Deleted successfully!!

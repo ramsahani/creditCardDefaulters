@@ -63,14 +63,14 @@ def predictRouteClient():
 @cross_origin()
 def trainingRouteClient():
     try:
-        if request.json['filepath'] is not None:
-            path = request.json['filepath']
-            train_valObj = train_validation(path) #object initialization
 
-            train_valObj.train_validation() #calling the training_validation function
+        path = 'Training_Batch_Files'
+        train_valObj = train_validation(path) #object initialization
 
-            trainModelObj = trainModel() # object_initialization
-            trainModelObj.trainingModel()
+        train_valObj.train_validation() #calling the training_validation function
+
+        trainModelObj = trainModel() # object_initialization
+        trainModelObj.trainingModel()
 
     except ValueError:
 

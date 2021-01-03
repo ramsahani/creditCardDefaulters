@@ -1,0 +1,4 @@
+2021-01-03/23:54:23		LengthOfDateStampInFile:: 8	LengthOfTimeStampInFile:: 6	NumberOfColumns:: 24
+
+
+

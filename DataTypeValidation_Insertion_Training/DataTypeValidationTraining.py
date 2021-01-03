@@ -107,7 +107,7 @@ class dBOperations:
         badFilePath = self.badFilePath
         onlyfiles = [f for f in listdir(goodFilePath)]
         log_file = open("Training_Logs/DbInsertLog.txt",'a+')
-        print(onlyfiles)
+
         for file in onlyfiles:
             try:
                 with open(goodFilePath+'/' + file, 'r') as f:

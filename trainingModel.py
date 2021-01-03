@@ -48,7 +48,7 @@ class trainModel:
             X=kmeans.create_clusters(X,numbers_of_clusters)
             #create a new column in dataset consisting of the corresponding cluster assignments.
             X['Labels']=Y
-            print(X)
+
             # getting the unique clusters from our dataset
             list_of_clusters = X['Clusters'].unique()
 

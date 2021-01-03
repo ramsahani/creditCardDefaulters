@@ -1,0 +1,4 @@
+2021-01-04/00:55:54		Opened Prediction database successfully 
+2021-01-04/00:55:55		Closed Prediction database successfully
+2021-01-04/00:55:55		Opened Prediction database successfully 
+2021-01-04/00:58:24		Opened Prediction database successfully 
