@@ -25,4 +25,4 @@ open http://localhost:5000/prediction
 
 #### Prediction page looks like this.
 
-![](Sceenshot(99).png)
+![alt Prediction Page](https://github.com/ramsahani/creditCardDefaulters/blob/main/Capture.JPG?raw=true)
